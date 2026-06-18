@@ -1,7 +1,7 @@
 import { Controller, Get, Req, Res } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { CsrfService } from './csrf/csrf.service';
-import { CurrentSession } from './decorators/session.decorator';
+import { CsrfService } from '@/csrf/csrf.service';
+import { CurrentSession } from '@/decorators/session.decorator';
 import type { SessionData } from 'express-session';
 
 @Controller()
@@ -24,10 +24,6 @@ export class AppController {
       session.createdAt = new Date().toISOString();
     }
     const csrfToken = this.csrfService.generateToken(req, res);
-    return {
-      userId: session.userId ?? null,
-      isNew,
-      csrfToken,
-    };
+    return { userId: session.userId ?? null, isNew, csrfToken };
   }
 }

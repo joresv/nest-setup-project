@@ -1,6 +1,11 @@
+import type { Session } from '../hooks/useSession'
 import './Profile.css'
 
-function Profile() {
+interface Props {
+  session: Session
+}
+
+function Profile({ session }: Props) {
   return (
     <section id="profile-page">
       <div className="profile-container">
@@ -10,39 +15,27 @@ function Profile() {
           </div>
           <div className="profile-info">
             <h1>Mon Profil</h1>
-            <p className="username">@utilisateur</p>
+            <p className="username">@{session.userId}</p>
           </div>
         </div>
 
         <div className="profile-content">
           <div className="profile-section">
-            <h2>À propos</h2>
-            <p>
-              Bienvenue sur votre page de profil. Ici, vous pouvez voir vos informations personnelles et gérer vos paramètres.
-            </p>
-          </div>
-
-          <div className="profile-section">
             <h2>Informations personnelles</h2>
             <div className="info-grid">
               <div className="info-item">
-                <label>Email:</label>
-                <p>utilisateur@example.com</p>
+                <label>Nom d'utilisateur</label>
+                <p>{session.userId}</p>
               </div>
               <div className="info-item">
-                <label>Lieu:</label>
-                <p>France</p>
-              </div>
-              <div className="info-item">
-                <label>Membre depuis:</label>
+                <label>Membre depuis</label>
                 <p>Juin 2026</p>
               </div>
             </div>
           </div>
 
           <div className="profile-actions">
-            <button className="btn-edit">Modifier le profil</button>
-            <button className="btn-settings">Paramètres</button>
+            <button className="btn-settings">Modifier le profil</button>
           </div>
         </div>
       </div>

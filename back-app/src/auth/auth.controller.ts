@@ -1,21 +1,27 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
 import type { Request } from 'express';
-import type { SessionData } from 'express-session';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { CurrentSession } from '../decorators/session.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  login(
+  async login(
     @Body() dto: LoginDto,
-    @CurrentSession() session: SessionData,
-  ): { userId: string } {
+    @Req() req: Request,
+  ): Promise<{ userId: string }> {
     const userId = this.authService.validate(dto.username, dto.password);
-    session.userId = userId;
+
+    // Régénère l'ID de session pour prévenir la fixation de session
+    await new Promise<void>((resolve, reject) => {
+      req.session.regenerate((err) => (err ? reject(err) : resolve()));
+    });
+
+    req.session.userId = userId;
+    req.session.createdAt = new Date().toISOString();
+
     return { userId };
   }
 

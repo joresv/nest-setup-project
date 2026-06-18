@@ -1,11 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
-import { AppModule } from './app.module';
-import { CsrfService } from './csrf/csrf.service';
-import { MiddlewareBootstrap } from '../bootstrap/middleware.bootstrap';
-import { SessionBootstrap } from '../bootstrap/session.bootstrap';
-import { SwaggerBootstrap } from '../bootstrap/swagger.bootstrap';
+import { ConfigType } from '@nestjs/config';
+import { AppModule } from '@/app.module';
+import { CsrfService } from '@/csrf/csrf.service';
+import { appConfig } from '@/config/app.config';
+import { MiddlewareBootstrap } from '@bootstrap/middleware.bootstrap';
+import { SessionBootstrap } from '@bootstrap/session.bootstrap';
+import { SwaggerBootstrap } from '@bootstrap/swagger.bootstrap';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule.forRoot());
@@ -21,6 +23,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  await app.listen(config.get('PORT') ?? 4500);
+  const { port } = app.get<ConfigType<typeof appConfig>>(appConfig.KEY);
+  await app.listen(port);
 }
 bootstrap();

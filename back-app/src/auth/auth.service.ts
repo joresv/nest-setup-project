@@ -1,16 +1,17 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import type { ConfigType } from '@nestjs/config';
+import { authConfig } from '../config/auth.config';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly config: ConfigService) {}
+  constructor(
+    @Inject(authConfig.KEY)
+    private readonly config: ConfigType<typeof authConfig>,
+  ) {}
 
   // Remplacer par une vraie validation DB
   validate(username: string, password: string): string {
-    const validUsername = this.config.getOrThrow<string>('AUTH_USERNAME');
-    const validPassword = this.config.getOrThrow<string>('AUTH_PASSWORD');
-
-    if (username !== validUsername || password !== validPassword) {
+    if (username !== this.config.username || password !== this.config.password) {
       throw new UnauthorizedException('Identifiants invalides');
     }
     return username;
