@@ -8,13 +8,18 @@ const PUBLIC_ROUTES: Array<{ path: RegExp; method: string }> = [
   { path: /^\/api\/auth\/logout$/, method: 'POST' },
 ];
 
+
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
+
   use(req: Request, _res: Response, next: NextFunction): void {
+
+    const currentPath = req.originalUrl.split('?')[0];
+
     const isPublic = PUBLIC_ROUTES.some(
-      ({ path, method }) => path.test(req.path) && method === req.method,
+      ({ path, method }) => path.test(currentPath) && method === req.method,
     );
-    
+
     if (isPublic) return next();
 
     if (!req.session?.userId) {
