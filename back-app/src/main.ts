@@ -10,8 +10,8 @@ import { SessionBootstrap } from '@bootstrap/session.bootstrap';
 import { SwaggerBootstrap } from '@bootstrap/swagger.bootstrap';
 
 class Application {
-  private app!: NestExpressApplication;
-  private config!: ConfigService;
+  private app: NestExpressApplication;
+  private config: ConfigService;
 
   static async create(): Promise<Application> {
     const instance = new Application();

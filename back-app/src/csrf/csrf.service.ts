@@ -4,7 +4,7 @@ import { CsrfTokenGenerator } from 'csrf-csrf';
 
 @Injectable()
 export class CsrfService {
-  private generator!: CsrfTokenGenerator;
+  private generator: CsrfTokenGenerator;
 
   init(generator: CsrfTokenGenerator): void {
     this.generator = generator;
