@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CsrfTokenGenerator } from 'csrf-csrf';
+import { CsrfTokenGenerator, GenerateCsrfTokenOptions } from 'csrf-csrf';
 
 @Injectable()
 export class CsrfService {
@@ -10,7 +10,7 @@ export class CsrfService {
     this.generator = generator;
   }
 
-  generateToken(req: Request, res: Response): string {
-    return this.generator(req, res);
+  generateToken(req: Request, res: Response, options?: GenerateCsrfTokenOptions): string {
+    return this.generator(req, res, options);
   }
 }

@@ -23,7 +23,7 @@ export class AppController {
     if (isNew) {
       session.createdAt = new Date().toISOString();
     }
-    const csrfToken = this.csrfService.generateToken(req, res);
+    const csrfToken = this.csrfService.generateToken(req, res, { overwrite: false });
     return { userId: session.userId ?? null, isNew, csrfToken };
   }
 }
