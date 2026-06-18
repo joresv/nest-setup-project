@@ -5,7 +5,7 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: resolve(__dirname, '../back-app/public'),
+    outDir: resolve(__dirname, '../back-app/public/build'),
     emptyOutDir: true,
   },
   server: {

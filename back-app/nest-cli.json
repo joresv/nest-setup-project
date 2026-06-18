@@ -5,10 +5,10 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "assets": [
-      { 
-        "include": "../public/**/*", 
-        "outDir": "dist/public", 
-        "watchAssets": true 
+      {
+        "include": "../public/**/*",
+        "outDir": "dist/public",
+        "watchAssets": true
       }
     ],
     "watchAssets": true

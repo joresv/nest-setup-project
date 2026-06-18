@@ -6,7 +6,7 @@ import { useSession } from './hooks/useSession'
 import './App.css'
 
 function App() {
-  const { session, loading } = useSession()
+  const { session, loading, refresh, apiFetch } = useSession()
 
   if (loading) return null
 
@@ -14,7 +14,10 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home session={session} />} />
+        <Route
+          path="/"
+          element={<Home session={session} refresh={refresh} apiFetch={apiFetch} />}
+        />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
