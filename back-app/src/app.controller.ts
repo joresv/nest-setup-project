@@ -1,12 +1,33 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Req, Res } from '@nestjs/common';
+import type { Request, Response } from 'express';
+import { CsrfService } from './csrf/csrf.service';
+import { CurrentSession } from './decorators/session.decorator';
+import type { SessionData } from 'express-session';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly csrfService: CsrfService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('health')
+  health() {
+    return { status: 'ok' };
+  }
+
+  @Get('session')
+  initSession(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @CurrentSession() session: SessionData,
+  ) {
+    const isNew = !session.createdAt;
+    if (isNew) {
+      session.createdAt = new Date().toISOString();
+    }
+    const csrfToken = this.csrfService.generateToken(req, res);
+    return {
+      userId: session.userId ?? null,
+      isNew,
+      csrfToken,
+    };
   }
 }

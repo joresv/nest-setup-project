@@ -1,28 +1,26 @@
 import { NestFactory } from '@nestjs/core';
-import compression from 'compression';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import { CsrfService } from './csrf/csrf.service';
+import { MiddlewareBootstrap } from '../bootstrap/middleware.bootstrap';
+import { SessionBootstrap } from '../bootstrap/session.bootstrap';
+import { SwaggerBootstrap } from '../bootstrap/swagger.bootstrap';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule.forRoot());
+  const config = app.get(ConfigService);
 
-  app.use(compression());
-  app.enableCors();
+  new MiddlewareBootstrap(app, config).configure();
 
-   app.setGlobalPrefix('api');
+  const sessionBootstrap = new SessionBootstrap(app, config);
+  sessionBootstrap.configure();
+  app.get(CsrfService).init(sessionBootstrap.generateCsrfToken);
 
-  const config = new DocumentBuilder()
-    .setTitle('Nest Setup Example')
-    .setDescription('The nest-setup API description')
-    .setVersion('1.0')
-    .addTag('nest-setup')
-    .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, documentFactory);
+  new SwaggerBootstrap(app, config).configure();
 
- 
+  app.setGlobalPrefix('api');
 
-  await app.listen(process.env.PORT ?? 4500);
+  await app.listen(config.get('PORT') ?? 4500);
 }
 bootstrap();
