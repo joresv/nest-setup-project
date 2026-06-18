@@ -9,21 +9,36 @@ import { MiddlewareBootstrap } from '@bootstrap/middleware.bootstrap';
 import { SessionBootstrap } from '@bootstrap/session.bootstrap';
 import { SwaggerBootstrap } from '@bootstrap/swagger.bootstrap';
 
-async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule.forRoot());
-  const config = app.get(ConfigService);
+class Application {
+  private app!: NestExpressApplication;
+  private config!: ConfigService;
 
-  new MiddlewareBootstrap(app, config).configure();
+  static async create(): Promise<Application> {
+    const instance = new Application();
+    instance.app = await NestFactory.create<NestExpressApplication>(AppModule.forRoot());
+    instance.config = instance.app.get(ConfigService);
+    return instance;
+  }
 
-  const sessionBootstrap = new SessionBootstrap(app, config);
-  sessionBootstrap.configure();
-  app.get(CsrfService).init(sessionBootstrap.generateCsrfToken);
+  configure(): this {
+    new MiddlewareBootstrap(this.app, this.config).configure();
 
-  new SwaggerBootstrap(app, config).configure();
+    const session = new SessionBootstrap(this.app, this.config);
+    session.configure();
+    this.app.get(CsrfService).init(session.generateCsrfToken);
 
-  app.setGlobalPrefix('api');
+    new SwaggerBootstrap(this.app, this.config).configure();
 
-  const { port } = app.get<ConfigType<typeof appConfig>>(appConfig.KEY);
-  await app.listen(port);
+    this.app.setGlobalPrefix('api');
+
+    return this;
+  }
+
+  async listen(): Promise<void> {
+    const { port } = this.app.get<ConfigType<typeof appConfig>>(appConfig.KEY);
+    await this.app.listen(port);
+  }
 }
-bootstrap();
+
+Application.create()
+  .then((app) => app.configure().listen());

@@ -17,7 +17,7 @@ export class AppModule {
       controllers: [AppController],
       imports: [
         ConfigModule.forRoot({ isGlobal: true, load: [appConfig, authConfig] }),
-        AuthModule,
+        AuthModule.forRoot(),
         ReactSpaModule.forRoot(),
       ],
     };

@@ -1,9 +1,14 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 
-@Module({
-  providers: [AuthService],
-  controllers: [AuthController],
-})
-export class AuthModule {}
+@Module({})
+export class AuthModule {
+  static forRoot(): DynamicModule {
+    return {
+      module: AuthModule,
+      providers: [AuthService],
+      controllers: [AuthController],
+    };
+  }
+}

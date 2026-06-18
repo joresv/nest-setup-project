@@ -14,7 +14,6 @@ export class AuthController {
   ): Promise<{ userId: string }> {
     const userId = this.authService.validate(dto.username, dto.password);
 
-    // Régénère l'ID de session pour prévenir la fixation de session
     await new Promise<void>((resolve, reject) => {
       req.session.regenerate((err) => (err ? reject(err) : resolve()));
     });

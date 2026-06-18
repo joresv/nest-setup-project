@@ -9,7 +9,6 @@ export class AuthService {
     private readonly config: ConfigType<typeof authConfig>,
   ) {}
 
-  // Remplacer par une vraie validation DB
   validate(username: string, password: string): string {
     if (username !== this.config.username || password !== this.config.password) {
       throw new UnauthorizedException('Identifiants invalides');
