@@ -23,6 +23,7 @@ export class ReactSpaModule {
               ? join(__dirname, '..', '..', 'public', 'maintenance')
               : join(__dirname, '..', '..', 'public', 'build'),
             exclude: ['/api/*path'],
+            renderPath: '*', 
           }],
           inject: [appConfig.KEY],
         }),
