@@ -1,8 +1,8 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { ServeStaticModule as NestServeStaticModule } from '@nestjs/serve-static';
-import { ConfigType } from '@nestjs/config';
-import { join } from 'path';
 import { appConfig } from '@/config/app.config';
+import { DynamicModule, Module } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { ServeStaticModule as NestServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({})
 export class ReactSpaModule {
@@ -23,7 +23,6 @@ export class ReactSpaModule {
               ? join(__dirname, '..', '..', 'public', 'maintenance')
               : join(__dirname, '..', '..', 'public', 'build'),
             exclude: ['/api/*path'],
-            renderPath: '*', 
           }],
           inject: [appConfig.KEY],
         }),
