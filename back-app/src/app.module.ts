@@ -8,6 +8,8 @@ import { ProfileModule } from '@/profile/profile.module';
 import { AuthMiddleware } from '@/middleware/auth.middleware';
 import { appConfig } from '@/config/app.config';
 import { authConfig } from '@/config/auth.config';
+import { redisConfig } from '@/config/redis.config';
+import { RedisModule } from '@/common/services/redis/redis.module';
 import { ReactSpaModule } from '@bootstrap/spa-config/serve-static.module';
 
 @Module({})
@@ -22,7 +24,8 @@ export class AppModule implements NestModule {
       providers: [AppService, CsrfService],
       controllers: [AppController],
       imports: [
-        ConfigModule.forRoot({ isGlobal: true, load: [appConfig, authConfig] }),
+        ConfigModule.forRoot({ isGlobal: true, load: [appConfig, authConfig, redisConfig] }),
+        RedisModule,
         AuthModule.forRoot(),
         ProfileModule,
         ReactSpaModule.forRoot(),
